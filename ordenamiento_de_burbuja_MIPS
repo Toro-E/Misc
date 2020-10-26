@@ -1,0 +1,79 @@
+.data
+
+tamaño: .word 6
+arreglo: 1, 2, 4, 5, 7, 9
+
+.text
+.globl main
+
+main:
+	
+	lw 	$t0, tamaño
+	move 	$t1, $zero
+	move 	$t2, $zero
+	addi 	$t2, $t2, 4
+	move 	$s0, $zero
+	addi 	$s0, $s0, 1
+	li 	$t4, 0
+	
+ordenar:
+	
+	beq 	$t4, $t0, terminar
+	
+	_ordenar:
+	
+		beq 	$t3, $t0, aux
+		lw 	$t5, arreglo($t1)
+		lw 	$t6, arreglo($t2)
+		addi 	$t3, $t3, 1
+	
+		slt 	$t7, $t5, $t6
+	
+		beq 	$t7, $s0, intercambio
+		addi 	$t1, $t1, 4
+		addi 	$t2, $t2, 4
+	
+		j ordenar
+		
+	j ordenar
+
+aux:
+	move 	$t1, $zero
+	move 	$t2, $zero
+	addi 	$t2, $t2, 4
+	move 	$t3, $zero
+	addi 	$t4, $t4, 1
+	
+	j ordenar
+	
+intercambio:
+	
+	sw 	$t5, arreglo($t2)
+	sw 	$t6, arreglo($t1)
+	addi 	$t1, $t1, 4
+	addi 	$t2, $t2, 4
+	
+	j ordenar
+	
+terminar:
+	
+	move 	$t1, $zero
+	move 	$t2, $zero
+
+imprimir:
+
+	bge 	$t1, $t0, _imprimir
+	lw 	$a0, arreglo($t2)
+	li 	$v0, 1
+	
+	syscall 
+	
+	addi 	$t1, $t1, 1 
+	addi 	$t2, $t2, 4
+	
+	j imprimir
+	
+_imprimir:
+
+	li 	$v0, 10
+	syscall
